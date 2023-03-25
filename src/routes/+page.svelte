@@ -1,2 +1,85 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import { onMount } from "svelte";
+    import Card from "../component/card.svelte";
+	import type { CardType } from "./cardpages/+server";
+    let cards:CardType[]=[],pages:number=0,page=0,first:number,last:number,length:number;
+    import { filter } from "../stores/filter";
+    async function getCard(filter:any) {
+        let response=await fetch('/cardpages',{
+            method:'POST',
+            credentials:"include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify({
+                filter,
+                $filter
+            })
+        });
+        let data=await response.json();
+        console.log(data,page);
+        cards=data.cards;
+        length=data.length;
+        pages=data.pages;
+        first=data.first;
+        last=data.last;
+    }
+
+    onMount(()=>{
+        filter.subscribe(()=>getCard({page}));
+    })
+
+    function firstPage() {
+        page=0;
+        getCard({page});
+    }
+    function lastPage() {
+        page=pages-1
+        getCard({page});
+    }
+
+    function previous() {
+        if(page>=0){
+            page=page==0?0:page-1;
+            getCard({page})
+        }
+    }
+
+    function next() {
+        if(pages>page){
+            page=page==pages-1?page:page+1;
+            getCard({page})
+        }
+    }
+
+</script>
+<section class="flex justify-center m-1 space-x-2">
+    <button on:click={firstPage}><img src="firstpage.svg" alt="firstpage" srcset="" width="24px" height="24px"></button>
+    <button on:click={previous}><img src="previous.svg" alt="previous" srcset="" width="24px" height="16px"></button>
+    <div>
+    {#if length!=undefined}
+        {first}-{last} of {length}
+    {/if}
+    </div>
+    <button on:click={next}><img src="next.svg" alt="next" srcset="" width="24px" height="24px"></button>
+    <button on:click={lastPage}><img src="lastpage.svg" alt="lastpage" srcset="" width="24px" height="24px"></button>
+</section>
+
+<section class="grid grid-cols-4">
+    {#each cards as card}
+        <Card downloads={card.downloads} likes={card.likes} oneline={card.oneline} title={card.title}    />
+    {/each}
+</section>
+
+<style>
+    button{
+        border: 1px #aaa solid;
+        background-color: #eee;
+    }
+    button:hover{
+        background-color: #ddd;
+    }
+    button:active{
+        background-color: #aaa;
+    }
+</style>
