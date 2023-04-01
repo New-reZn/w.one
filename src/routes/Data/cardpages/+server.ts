@@ -14,15 +14,7 @@ interface Data{
 }
 
 
-let cards:CardType[]=[
-    {
-        title:'hello world',
-        oneline:'this is line',
-        image:'noimage.png',
-        downloads:999999999999999,
-        likes:999999999999999
-    },
-]
+let cards:CardType[]=[]
 
 function createCopiesOfFirstIndex(numCopies: number): CardType[] {
     const copies: CardType[] = [];
@@ -32,7 +24,7 @@ function createCopiesOfFirstIndex(numCopies: number): CardType[] {
     return copies;
 }
 
-cards=createCopiesOfFirstIndex(126);
+//cards=createCopiesOfFirstIndex(126);
 
 function divideIntoPages(array: CardType[], pageSize: number): CardType[][] {
     if (pageSize <= 0) {
@@ -53,13 +45,13 @@ function divideIntoPages(array: CardType[], pageSize: number): CardType[][] {
   
 export async function POST({ request }) {
     const data:Data = await request.json();
-    console.log(data);
+    // console.log(data);
     const a:CardType[][]=divideIntoPages(cards,20);
     return json({
         cards:a[data.filter.page],
         pages:Math.ceil(cards.length / 20),
         length:cards.length,
-        first:data.filter.page*20+1,
+        first:data.filter.page*20!=0?data.filter.page*20+1:0,
         last:data.filter.page*20+a[data.filter.page].length
     });
 }

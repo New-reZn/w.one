@@ -1,27 +1,34 @@
 <script lang="ts">
-    let btractar=[true,false,false,false]
+    import { pageindex } from "../../stores/prog";
+    export let data;
 </script>
 
-<section class="flex">
-    <button class="{btractar[0]?'activebtn':''}">home</button>
-    <button class="{btractar[1]?'activebtn':''}">download</button>
-    <button class="{btractar[2]?'activebtn':''}">license</button>
-    <button class="{btractar[3]?'activebtn':''}">community</button>
+<section class="flex text-xs">
+    <a href="/{data.program}" class="{$pageindex[0]?'activebtn':''}">Home</a>
+    <a href="/{data.program}/download" class="{$pageindex[1]?'activebtn':''}">Download</a>
+    <a href="/{data.program}/license" class="{$pageindex[2]?'activebtn':''}">License</a>
+    <a href="/{data.program}/community" class="{$pageindex[3]?'activebtn':''}">Community</a>
 </section>  
 <section class="m">
     <slot/>
 </section>
 
 <style>
-    button{
+    a{
         padding: 0.25rem;
         padding-left: .3rem;
         padding-right: .3rem;
         border-left: 1px #ccc solid;
         border-right: 1px #ccc solid;
+        text-decoration: none;
+        color:black;
     }
-    button:hover{
+    a:hover{
         background-color: #ddd;
+        text-decoration: none;
+    }
+    a:visited{
+        color:black;
     }
     
     .activebtn{

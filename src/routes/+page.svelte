@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from "svelte";
     import Card from "../component/card.svelte";
-	import type { CardType } from "./cardpages/+server";
+	import type { CardType } from "./Data/cardpages/+server";
     let cards:CardType[]=[],pages:number=0,page=0,first:number,last:number,length:number;
     import { filter } from "../stores/filter";
     async function getCard(filter:any) {
-        let response=await fetch('/cardpages',{
+        let response=await fetch('/Data/cardpages',{
             method:'POST',
             credentials:"include",
             headers: {
@@ -17,7 +17,7 @@
             })
         });
         let data=await response.json();
-        console.log(data,page);
+        // console.log(data,page);
         cards=data.cards;
         length=data.length;
         pages=data.pages;
@@ -53,10 +53,10 @@
     }
 
 </script>
-<section class="flex justify-center m-1 space-x-2">
+<section class="flex justify-center p-1 space-x-2 sticky bg-white w-full top-0 items-center">
     <button on:click={firstPage}><img src="firstpage.svg" alt="firstpage" srcset="" width="24px" height="24px"></button>
     <button on:click={previous}><img src="previous.svg" alt="previous" srcset="" width="24px" height="16px"></button>
-    <div>
+    <div class="text-xs lg:text-base">
     {#if length!=undefined}
         {first}-{last} of {length}
     {/if}
@@ -65,9 +65,9 @@
     <button on:click={lastPage}><img src="lastpage.svg" alt="lastpage" srcset="" width="24px" height="24px"></button>
 </section>
 
-<section class="grid grid-cols-4">
+<section class="grid grid-cols-1 lg:grid-cols-4">
     {#each cards as card}
-        <Card downloads={card.downloads} likes={card.likes} oneline={card.oneline} title={card.title}    />
+        <Card downloads={card.downloads} likes={card.likes} oneline={card.oneline} title={card.title} link={"/"} imageSrc={''}/>
     {/each}
 </section>
 

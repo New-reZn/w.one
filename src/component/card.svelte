@@ -3,8 +3,8 @@
     let oneline:String;
     let downloads:number;
     let likes:number;
-    let imageSrc="noimage.png";
-    export let link='s';
+    let imageSrc:string;
+    let link:string;
 
     interface FormatOptions {
         digitsLimit?: number;
@@ -42,11 +42,18 @@
         }
     }
 
-    export {title,oneline,downloads,likes,src};    
+    export {title,oneline,downloads,likes,imageSrc,link};    
 </script>
+{#if link!=undefined}
+    
 <a href="/{link}">
     <div class="m-1 p-2 card cursor-pointer">
-        <img src="{imageSrc}" width="300px" height="300px" alt="">
+        {#if imageSrc!=''}
+            <img src="{imageSrc}" width="300px" height="300px" alt="">
+            {:else}
+            <img src="../noimage.png" width="300px" height="300px" alt="">            
+        {/if}
+        
         <div>
             <p class="text-sm truncate w-full">{title}</p>
             <p class="text-xs truncate w-full">{oneline}</p>
@@ -63,6 +70,7 @@
         </div>
     </div>
 </a>
+{/if}
 <style>
     .card{
         border: 1px #ccc solid;

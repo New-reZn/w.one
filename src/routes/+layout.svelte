@@ -1,7 +1,28 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import "../app.css";
     import Tagselector from "../component/tagselector.svelte";
     import {filter} from '../stores/filter';
+    // import { v4 as uuidv4 } from 'uuid';
+	import { onMount } from "svelte";
+
+    let registered=true;
+    let name:string;
+  
+    onMount(()=>{
+        let userId = localStorage.getItem('userId');
+        if (userId!==null){
+            
+             registered=true;
+        }
+    });
+
+    async function register() {
+        
+    }
+
+    
+
     let tags:string[];
     let sortby='0';
     let date='';
@@ -17,6 +38,7 @@
             hasImage,
             tags
         })
+        goto('/')
     }
 </script>
 
@@ -24,12 +46,17 @@
     W.ONE
 </title>
 
+
+
 <header class="p-0.5 flex items-center justify-between space-x-3">
-    <img src="title.png" width="64px" alt="logo w.one" srcset="">
+    <a href="/">
+        <img src="../title.png" width="64px" alt="logo w.one" srcset="">
+    </a>
     <div class="flex w-full">
         <input type="search" class="px-1 outline-none " placeholder="Search Item" id="searchtxt" bind:value={stext}>
-        <button class="ml-1 px-0.5" on:click={apply}><img width="32px" src="search.svg" alt="search button" srcset=""></button>
+        <button class="ml-1 px-0.5" on:click={apply}><img width="32px" src="../search.svg" alt="search button" srcset=""></button>
     </div>
+    <a class="-translate-x-1 underline" href="/post">post</a>
 </header>
 
 <div class="flex w-full justify-between">
@@ -42,7 +69,7 @@
             <option value="3">most downloaded</option>
         </select>
         <input type="date" bind:value={date}>
-        <Tagselector items={['a','b','c']} bind:stack={tags}/>
+        <Tagselector items={[]} bind:stack={tags}/>
         <label for="titlesearch" class="flex">
             <input type="checkbox" class="unwid mx-1" id="titlesearch" bind:value={titleOnly} checked>
             <p class="w-full text-xs">title only</p>
@@ -67,6 +94,15 @@
     <a href="/">feedback</a>
     <a href="/">about</a>
 </footer>
+
+{#if !registered}    
+    <div class="fixed grid items-center justify-center bg-white w-full h-full top-0 left-0">
+        <div class="border-[1px] border-[#aaa] p-3 bg-[#eee] space-y-2">
+            <input class="outline-none grid text-center" bind:value={name} placeholder="Please Enter Name" type="text">
+            <input class="cursor-pointer bg-[#eee] hover:bg-[#ddd] active:bg-[#bbb]" type="submit" value="Submit">
+        </div>
+    </div>
+{/if}
 
 <style>
     header{
