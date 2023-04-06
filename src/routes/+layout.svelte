@@ -3,25 +3,67 @@
 	import "../app.css";
     import Tagselector from "../component/tagselector.svelte";
     import {filter} from '../stores/filter';
-    // import { v4 as uuidv4 } from 'uuid';
+    import { v4 as uuidv4 } from 'uuid';
 	import { onMount } from "svelte";
+	import { registered } from "../stores/login";
+    export let data;
 
-    let registered=true;
     let name:string;
+    let isloading=true;
+
+    async function checkregister(register:any) {
+        let respone=await fetch('/Data/checkRegister',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(register)
+        });
+        if((await respone.json()).status==200){
+            registered.set(true);
+        }
+        else{
+            isloading=false;
+        }
+    }
   
+    async function register(data:any) {
+        
+        localStorage.setItem('userId',JSON.stringify(data));
+        console.log(localStorage.getItem('userId'))
+        let respone=await fetch('/Data/register',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(data)
+        });
+        if((await respone.json()).status===200){
+            checkregister(data)
+        }//else here
+        else{alert('some problem occured please try again')};
+    }
+
     onMount(()=>{
         let userId = localStorage.getItem('userId');
         if (userId!==null){
-            
-             registered=true;
+            let user=JSON.parse(userId);
+            checkregister({key:user.key,name:user.name});
+        }else{
+            //console.log(here)
+            isloading=false;
         }
     });
 
-    async function register() {
-        
+    async function doregister() {
+        if(!(name==undefined||/^\s*$/.test(name.trim()))){
+            let registerData={
+                name:name,
+                key:uuidv4(),
+            }
+            register(registerData);
+        }
     }
-
-    
 
     let tags:string[];
     let sortby='0';
@@ -69,13 +111,13 @@
             <option value="3">most downloaded</option>
         </select>
         <input type="date" bind:value={date}>
-        <Tagselector items={[]} bind:stack={tags}/>
+        <Tagselector items={data.tags} bind:stack={tags}/>
         <label for="titlesearch" class="flex">
             <input type="checkbox" class="unwid mx-1" id="titlesearch" bind:value={titleOnly} checked>
             <p class="w-full text-xs">title only</p>
         </label>
         <label for="imagesearch" class="flex">
-            <input type="checkbox" class="unwid mx-1" name="" id="imagesearch" bind:value={hasImage} checked>
+            <input type="checkbox" class="unwid mx-1" id="imagesearch" bind:value={hasImage} checked>
             <p class="w-full text-xs">has image</p>
         </label>
         <button class="p-1 float-right" on:click={apply}>apply?</button>
@@ -95,12 +137,16 @@
     <a href="/">about</a>
 </footer>
 
-{#if !registered}    
+{#if !($registered)}    
     <div class="fixed grid items-center justify-center bg-white w-full h-full top-0 left-0">
-        <div class="border-[1px] border-[#aaa] p-3 bg-[#eee] space-y-2">
-            <input class="outline-none grid text-center" bind:value={name} placeholder="Please Enter Name" type="text">
-            <input class="cursor-pointer bg-[#eee] hover:bg-[#ddd] active:bg-[#bbb]" type="submit" value="Submit">
-        </div>
+        {#if isloading}
+            Loading Please Wait ... 
+        {:else}
+            <div class="border-[1px] border-[#aaa] p-3 bg-[#eee] space-y-2">
+                <input class="outline-none grid text-center" bind:value={name} placeholder="Please Enter Name" type="text">
+                <input class="cursor-pointer bg-[#eee] hover:bg-[#ddd] active:bg-[#bbb]" on:click={doregister} type="submit" value="Submit">
+            </div>
+        {/if}
     </div>
 {/if}
 

@@ -1,9 +1,10 @@
-import { postdb } from "../stores/data";
+import { postdb } from '../../stores/data';
+
 
 let tag:string[]=[];
 postdb.allDocs({ include_docs: true }).then(result => {
 result.rows.forEach(row => {
-    tag.push(row?.doc?.name);
+    tag.push(row.doc?.name);
 });
 }).catch(error => {
     console.log(error);

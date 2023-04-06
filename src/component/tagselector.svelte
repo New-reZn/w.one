@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { writable } from 'svelte/store';
     import Tags from "./tags.svelte";
     
     let text:String;
