@@ -52,7 +52,7 @@
                 const contents = (event.target?.result)?.toString();
                 if(contents!=undefined && readme.files!=(undefined||null)){
                     postData.append("oneline",contents.replace(/[\n,\r\t]/g, ' ').split(" ").slice(0,10).toString().replace(/,/g, ' '));
-                    postData.append("readme",readme.files[0])
+                    postData.append("readme",readme.files[0],readme.files[0].name)
 
                 }
                 else{
@@ -105,14 +105,14 @@
         }
 
         if(image.files!=(undefined||null)){
-            postData.append("image",image.files[0])
+            postData.append("image",image.files[0],image.files[0].name);
         }else{
             console.log("image error")
             return;
         }
         
         if(license.files!=(undefined||null)){
-            postData.append("license",license.files[0])
+            postData.append("license",license.files[0],license.files[0].name)
         }else{
             console.log("license error")
             return;

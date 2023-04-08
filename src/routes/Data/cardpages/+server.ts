@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { postdb } from '../../../stores/data.js';
 
 interface CardType {
     title: string;
@@ -43,7 +44,7 @@ function divideIntoPages(array: CardType[], pageSize: number): CardType[][] {
     return pages;
 }
   
-export async function POST({ request }) {
+export async function POST({ request }:any) {
     const data:Data = await request.json();
     // console.log(data);
     const a:CardType[][]=divideIntoPages(cards,20);
