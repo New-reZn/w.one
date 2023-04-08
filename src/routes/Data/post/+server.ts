@@ -38,11 +38,11 @@ async function isDuplicate(title:string,fileName:string,mainPoints:string[]){
         const existingPost = row.doc;
         if(existingPost!=undefined){
             const existingMainPoints = existingPost?.mainPoints;
-            if(existingMainPoints) {
-                const similarityScore = similarity(mainPoints, existingMainPoints);
-                const isSameTitle = title.toLowerCase() === existingPost?.title.toLowerCase();
-                const isSameFilename=existingPost?.ogFile === fileName;
-                return (similarityScore > 0.9 &&  isSameFilename)||isSameTitle;
+            if(existingMainPoints) { // check if existingMainPoints is defined
+              const similarityScore = similarity(mainPoints, existingMainPoints);
+              const isSameTitle = title.toLowerCase() === existingPost?.title.toLowerCase();
+              const isSameFilename=existingPost?.ogFile === fileName;
+              return (similarityScore > 0.9 &&  isSameFilename)||isSameTitle;
             }
         }
         return false; 
