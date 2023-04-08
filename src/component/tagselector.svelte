@@ -22,7 +22,7 @@
 <ul class="p-1 my-1 w-full">
     <input bind:value={text} type="text" class="p-1 mb-1 w-full" placeholder="Enter tags" list="items" on:change={add}/>
     <datalist id="items">
-        {#each items as item (item)}
+        {#each items as item }
             <option value="{item}"></option>
         {/each}
     </datalist>

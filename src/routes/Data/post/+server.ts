@@ -30,22 +30,29 @@ function similarity(mainPoints1:string[],mainPoints2:string[]):number{
 }
 
 async function isDuplicate(title:string,fileName:string,mainPoints:string[]){
-    const existingPosts = await postdb.query<Post>('my_index', {
-        startkey: 'post_',
-        endkey: 'post_\uffff'
+    const mapFunction = function(doc:any) {
+      if (doc._id.startsWith('post_')) {
+        // @ts-ignore
+        emit(doc._id, doc);
+      }
+    };
+    const existingPosts = await postdb.query<Post>(mapFunction,{
+        include_docs: true,
+        reduce: false
     });
+
     return existingPosts.rows.some((row) => {
-        const existingPost = row.doc;
-        if(existingPost!=undefined){
-            const existingMainPoints = existingPost?.mainPoints;
-            if(existingMainPoints) { // check if existingMainPoints is defined
-              const similarityScore = similarity(mainPoints, existingMainPoints);
-              const isSameTitle = title.toLowerCase() === existingPost?.title.toLowerCase();
-              const isSameFilename=existingPost?.ogFile === fileName;
-              return (similarityScore > 0.9 &&  isSameFilename)||isSameTitle;
-            }
-        }
-        return false; 
+      const existingPost = row.doc;
+      if(existingPost!=undefined){
+          const existingMainPoints = existingPost?.mainPoints;
+          if(existingMainPoints) { // check if existingMainPoints is defined
+            const similarityScore = similarity(mainPoints, existingMainPoints);
+            const isSameTitle = title.toLowerCase() === existingPost?.title.toLowerCase();
+            const isSameFilename=existingPost?.ogFile === fileName;
+            return (similarityScore > 0.9 &&  isSameFilename)||isSameTitle;
+          }
+      }
+      return false; 
     });
 }
 
