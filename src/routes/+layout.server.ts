@@ -1,3 +1,4 @@
+import { Result } from "postcss";
 import { postdb } from "../stores/data";
 
 let tag:string[]=[];
@@ -34,4 +35,3 @@ const mapFunction = function(doc:any) {
 export function load({params}:any){
     return {tags:tag};
 }
-

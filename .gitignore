@@ -8,4 +8,7 @@ node_modules
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-static/media/
+static/media/*
+w.one-post
+w.one-user
+w.one-post-mrview-temp

@@ -9,5 +9,5 @@
 </script>
 
 <section class="p-2">
-    {data.program}
+    {data.license}
 </section>

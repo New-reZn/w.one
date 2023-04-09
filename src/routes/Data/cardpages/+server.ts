@@ -14,18 +14,29 @@ interface Data{
     }
 }
 
-
 let cards:CardType[]=[]
 
-function createCopiesOfFirstIndex(numCopies: number): CardType[] {
-    const copies: CardType[] = [];
-    for (let i = 0; i < numCopies; i++) {
-      copies.push(cards[0]);
+async function getAllpost() {
+  const mapFunction = function(doc:any) {
+    if (doc._id.startsWith('post_')) {
+      // @ts-ignore
+      emit(doc._id, doc);
     }
-    return copies;
+  };
+  const result = await postdb.query(mapFunction,{
+      include_docs: true,
+      reduce: false
+  });
+  const tags = result.rows.map(row => row.value);
+  return tags;
 }
 
-//cards=createCopiesOfFirstIndex(126);
+await getAllpost().then(result=>{
+  result.forEach(data=>{
+    console.log(data)
+    cards.push(data)
+  })
+})
 
 function divideIntoPages(array: CardType[], pageSize: number): CardType[][] {
     if (pageSize <= 0) {

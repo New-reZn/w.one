@@ -36,6 +36,7 @@
 		"multer": "^1.4.5-lts.1",
 		"pouchdb": "^8.0.1",
 		"pouchdb-adapter-node-websql": "^7.0.0",
+		"pouchdb-find": "^8.0.1",
 		"showdown": "^2.1.0",
 		"uuid": "^9.0.0"
 	}

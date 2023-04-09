@@ -67,7 +67,8 @@
 
 <section class="grid grid-cols-1 lg:grid-cols-4">
     {#each cards as card}
-        <Card downloads={card.downloads} likes={card.likes} oneline={card.oneline} title={card.title} link={"/"} imageSrc={''}/>
+
+        <Card downloads={card.downloads} likes={card.likes} oneline={card.oneline} title={card.title} link={card.title} imageSrc={card.image}/>
     {/each}
 </section>
 

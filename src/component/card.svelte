@@ -15,6 +15,9 @@
     }
 
     function formatNumber(num: number, options: FormatOptions = {}): string {
+        if(!num){
+            return '0';
+        }
         const {
             digitsLimit = Infinity,
             digitsAfterDecimal = 0,
@@ -41,7 +44,6 @@
             return `${truncatedWholePart}${decimalSeparator}${decimalPart}`;
         }
     }
-
     export {title,oneline,downloads,likes,imageSrc,link};    
 </script>
 {#if link!=undefined}
@@ -49,7 +51,7 @@
 <a href="/{link}">
     <div class="m-1 p-2 card cursor-pointer">
         {#if imageSrc!=''}
-            <img src="{imageSrc}" width="300px" height="300px" alt="">
+            <img src={imageSrc.replace('static','')} width="300px" height="300px" alt="">
             {:else}
             <img src="../noimage.png" width="300px" height="300px" alt="">            
         {/if}
