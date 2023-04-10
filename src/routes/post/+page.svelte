@@ -9,6 +9,7 @@
     let image:HTMLInputElement;
     let readme:HTMLInputElement;
     let license:HTMLInputElement;
+    let filedesc:string;
     export let data;
     const postData=new FormData();
     let prop={
@@ -74,10 +75,8 @@
         return title;
     }
 
-
-
     async function upload(){
-        let user=localStorage.getItem('userId');
+        const user=localStorage.getItem('userId');
         const xhr = new XMLHttpRequest();
         console.log('here')
 
@@ -93,6 +92,13 @@
             postData.append("date",Date.now().toString());
         }else{
             console.log("title error")
+            return;
+        }
+
+        if(!(filedesc==undefined||/^\s*$/.test(filedesc.trim()))){
+            postData.append("filedesc",filedesc);
+        }else{
+            console.log("fileDesc error")
             return;
         }
 
@@ -139,6 +145,7 @@
         console.log(postData);
         xhr.open('POST', 'Data/post');
         xhr.send(postData);
+        //check for sucess
     }
 
     function previewImage(event:Event) {
@@ -169,6 +176,8 @@
             <input type="text" id="title" bind:value={title} placeholder="title" class="w-full outline-none p-1">
             <label for="title" class="self-start">Enter Tags:</label>
             <Tagselector items={data.tags} bind:stack={tags}/>
+            <label for="filedesc" class="self-start">Enter Folder Description:</label>
+            <input type="text" id="filedesc" bind:value={filedesc} placeholder="Write about folder" class="w-full outline-none p-1">
         </div>
     </div>
     <div class="m-2 grid grid-cols-3 space-x-1 items-center justify-center">
@@ -194,7 +203,7 @@
         <input type="file" bind:this={license} id="license" accept=".md, .txt">
         <input type="file" id="fileInput" {...prop} multiple bind:this={fileInput}>
     </div>
-    <input class="bor p-2 cursor-pointer hover:bg-[#aaa] active:bg-[#999] " type="submit" value="Upload" on:click={upload}>
+    <input class="bor p-2 cursor-pointer hover:bg-[#aaa] active:bg-[#999]" type="submit" value="Upload" on:click={upload}>
 </section>
 
 <style>

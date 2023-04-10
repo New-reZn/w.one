@@ -33,7 +33,7 @@ async function getAllpost() {
 
 await getAllpost().then(result=>{
   result.forEach(data=>{
-    console.log(data)
+    // console.log(data)
     cards.push(data)
   })
 })

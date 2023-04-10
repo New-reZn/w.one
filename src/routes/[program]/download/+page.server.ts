@@ -31,11 +31,16 @@ async function read(filePath: string) {
     }
 }
 
-
-export async function load({params}){
+export async function load({params}:any){
     const program=params.program;
-    let data=await postdb.find<Promise<Post>>({
-        selector:{title:params.program}
+    let data:any=await postdb.find({
+        selector:{
+          title:params.program
+        },
     })
-    return {post_digest:data.docs[0]._id};
+
+    return {
+      post_digest:data.docs[0]._id,
+      files:data.docs[0].filename,
+    };
 }

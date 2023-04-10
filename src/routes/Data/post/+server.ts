@@ -48,7 +48,7 @@ async function isDuplicate(title:string,fileName:string,mainPoints:string[]){
           if(existingMainPoints) { // check if existingMainPoints is defined
             const similarityScore = similarity(mainPoints, existingMainPoints);
             const isSameTitle = title.toLowerCase() === existingPost?.title.toLowerCase();
-            const isSameFilename=existingPost?.ogFile === fileName;
+            const isSameFilename=existingPost?.ogFile.toLowerCase() === fileName.toLowerCase();
             return (similarityScore > 0.9 &&  isSameFilename)||isSameTitle;
           }
       }
@@ -56,7 +56,7 @@ async function isDuplicate(title:string,fileName:string,mainPoints:string[]){
     });
 }
 
-export async function POST({request}){
+export async function POST({request}:any){
     try{
         const data = await request.formData();
         
@@ -65,6 +65,7 @@ export async function POST({request}){
         const oneline=data.get('oneline');
         const license=data.get('license') as File;
         const title=data.get('title') as string;
+        const fileDesc=data.get('filedesc') as string;
         const user=JSON.parse(data.get('user') as string) as {name:string,key:string};
         const date=data.get('date') as string;
         const tagsEntry = data.get('tags');
@@ -110,7 +111,10 @@ export async function POST({request}){
                 date:date,
                 dateAdded:(new Date()).toISOString(),
                 ogFile:file.name,
-                filename:[`${filename}`],
+                filename:[{
+                    desc:`${fileDesc}`,
+                    file:`${filename}`
+                }],
                 readme:`${readme_path}`,
                 license:`${license_path}`,
                 image:`${image_path}`
