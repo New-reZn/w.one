@@ -11,7 +11,7 @@ export const userdb = new PouchDB('w.one-user', { adapter: 'websql' });
 export const postdb = new PouchDB('w.one-post', { adapter: 'websql' });
 
 postdb.createIndex({
-    index: {fields: ['title','user','_id']}
+    index: {fields: ['title','user','_id','post']}
 }).then(function () {
     console.log()
 });

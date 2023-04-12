@@ -126,7 +126,7 @@ export async function POST({request}:any){
                 likeby:[],
             }
             const downloads={
-                _id:`like_${uuidv4()}`,
+                _id:`download_${uuidv4()}`,
                 post:`post_${id}`,
                 ogUser:user.key,
                 downloadby:[],

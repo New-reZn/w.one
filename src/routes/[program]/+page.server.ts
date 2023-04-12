@@ -31,14 +31,35 @@ async function read(filePath: string) {
   }
   
 export async function load({params}:any){
-    const program=params.program;
-    let data=await postdb.find<Promise<Post>>({
-        selector:{title:params.program}
-    })
-    let readme=await read(data.docs[0].readme);
+      let data:any=await postdb.find({
+        selector:{
+          title:params.program
+        }
+      })
+      let readme=await read(data.docs[0].readme);
+      data=await postdb.find({
+        selector:{
+          title:params.program
+        },
+      })
+      if(data.docs[0]!=undefined){
+        const id=data.docs[0]._id;
+        let docs=await postdb.find({
+        selector:{
+          post:id
+        },
+      })
+      let download:any=docs.docs[0];
+      let like:any=docs.docs[1]; 
+      
+
     return {
+        id:like._id,
+        likes:like.likeby.length,
+        downloads:download.downloadby.length,
         title:data.docs[0].title,
         image:data.docs[0].image.replace('static',''),
         readme
     };
+  }
 }

@@ -1,8 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { pageindex } from '../../../stores/prog';
-	import { json } from '@sveltejs/kit';
-	import { dataset_dev } from 'svelte/internal';
     import { registered } from '../../../stores/login';
     import JSZip from "jszip";
     let uploader=false;
@@ -92,6 +90,33 @@
     }
 
     export let data;
+
+    async function incrementDownload() {
+
+        console.log('clicked')
+        let user=localStorage.getItem("userId");
+        if(user!=null){
+            let response=await fetch('/Data/indownload',{
+                method:'POSt',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    user,
+                    id:data.id,
+                    stat:data.title
+                })
+            })
+            let result=await response.json();
+            if(result.status===500){
+                console.log('exist error');
+                return;
+            }
+        }else{
+            registered.set(false);
+        }
+    }
+
     onMount(async ()=>{
         let user=localStorage.getItem('userId')
         if(user==null){
@@ -111,7 +136,7 @@
             },
             body:JSON.stringify(sending)
         });
-        uploader=await response.json();
+        uploader=(await response.json()).status;
     })
     const files=data.files;
     // console.log(data)
@@ -143,7 +168,7 @@
     {#each files as file}
         <tr>
             <td>{file.desc}</td>
-            <td><a href="{file.file.replace('static','')}">click here</a></td>
+            <td><a href="{file.file.replace('static','')}" on:click={incrementDownload}>click here</a></td>
         </tr>    
     {/each}
 </table>

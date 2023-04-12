@@ -7,7 +7,6 @@
     <a href="/{data.program}" class="{$pageindex[0]?'activebtn':''}">Home</a>
     <a href="/{data.program}/download" class="{$pageindex[1]?'activebtn':''}">Download</a>
     <a href="/{data.program}/license" class="{$pageindex[2]?'activebtn':''}">License</a>
-    <a href="/{data.program}/community" class="{$pageindex[3]?'activebtn':''}">Community</a>
 </section>  
 <section class="m">
     <slot/>
