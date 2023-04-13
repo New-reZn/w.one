@@ -13,15 +13,16 @@ export async function POST({request}:any) {
     const user=JSON.parse(data.user)
     const id=data.id;
     const post=data.stat;
+
     const like:any=(await postdb.find({
         selector:{
             _id:id
         }
     })).docs[0];
-    
+
     const Post:any=(await postdb.find({
         selector:{
-            title:post.title
+            title:post
         }
     })).docs[0];
 
@@ -31,14 +32,15 @@ export async function POST({request}:any) {
     });
     
     if(like.ogUser===user.key||check){
-        Post.likes=like.likeby.length;
-        postdb.put(Post);
+        
         return json({
             status:500
         })
     }else{
         like.likeby.push(user);
-        postdb.put(like);
+        await postdb.put(like);
+        Post.likes=like.likeby.length;
+        await postdb.put(Post);
         return json({
             status:200
         })   

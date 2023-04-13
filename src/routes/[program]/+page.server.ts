@@ -37,11 +37,6 @@ export async function load({params}:any){
         }
       })
       let readme=await read(data.docs[0].readme);
-      data=await postdb.find({
-        selector:{
-          title:params.program
-        },
-      })
       if(data.docs[0]!=undefined){
         const id=data.docs[0]._id;
         let docs=await postdb.find({
@@ -51,7 +46,6 @@ export async function load({params}:any){
       })
       let download:any=docs.docs[0];
       let like:any=docs.docs[1]; 
-      
 
     return {
         id:like._id,

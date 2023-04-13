@@ -21,7 +21,7 @@ export async function POST({request}:any) {
 
     const Post:any=(await postdb.find({
         selector:{
-            title:post.title
+            title:post
         }
     })).docs[0];
     
@@ -31,14 +31,15 @@ export async function POST({request}:any) {
         return;
     });
     if(download.ogUser===user.key||check){
-        Post.downloads=download.downloadby.length;
-        postdb.put(Post);
         return json({
             status:500
         })
     }else{
         download.downloadby.push(user);
-        postdb.put(download);
+        await postdb.put(download);
+        Post.downloads=download.downloadby.length;
+        await postdb.put(Post);
+        
         return json({
             status:200
         })   
