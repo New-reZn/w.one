@@ -14,16 +14,17 @@ function getMainPoints(paragraph: string): Promise<string[]> {
     return new Promise((resolve, reject) => {
       try {
         const doc = nlp(paragraph);
-        const nouns = doc.nouns().out('array') as string[];
-        const verbs = doc.verbs().out('array') as string[];
-        const keywords = nouns.concat(verbs);
-        const mainPoints = Array.from(new Set(keywords));
-        resolve(mainPoints);
+        const keywords = doc.nouns().concat(doc.verbs()).out('array') as string[];
+        const mainPoints = keywords
+          .map((word) => word.replace(/[^A-Za-z0-9\s]/g, ''))
+          .filter(Boolean)
+          .filter((word) => word.trim().length > 1);
+        resolve(Array.from(new Set(mainPoints)));
       } catch (error) {
         reject(error);
       }
     });
-  }
+}
 
 function similarity(mainPoints1:string[],mainPoints2:string[]):number{
     return mainPoints1.filter((word) => mainPoints2.includes(word)).length / mainPoints1.length;

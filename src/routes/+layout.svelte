@@ -1,4 +1,10 @@
 <script lang="ts">
+    let tags:string[];
+    let sortby='0';
+    let date='';
+    let titleOnly:boolean=false;
+    let hasImage:boolean=true;
+    let stext='';
 	import { goto } from "$app/navigation";
 	import "../app.css";
     import Tagselector from "../component/tagselector.svelte";
@@ -65,13 +71,8 @@
         }
     }
 
-    let tags:string[];
-    let sortby='0';
-    let date='';
-    let titleOnly=true;
-    let hasImage=true;
-    let stext='';
     function apply(){
+        console.log(titleOnly,hasImage)
         filter.set({
             searchText:stext,
             date,
@@ -113,11 +114,11 @@
         <input type="date" bind:value={date}>
         <Tagselector items={data.tags} bind:stack={tags}/>
         <label for="titlesearch" class="flex">
-            <input type="checkbox" class="unwid mx-1" id="titlesearch" bind:value={titleOnly} checked>
+            <input type="checkbox" class="unwid mx-1" id="titlesearch" bind:checked={titleOnly}>
             <p class="w-full text-xs">title only</p>
         </label>
         <label for="imagesearch" class="flex">
-            <input type="checkbox" class="unwid mx-1" id="imagesearch" bind:value={hasImage} checked>
+            <input type="checkbox" class="unwid mx-1" id="imagesearch" bind:checked={hasImage}>
             <p class="w-full text-xs">has image</p>
         </label>
         <button class="p-1 float-right" on:click={apply}>apply?</button>
