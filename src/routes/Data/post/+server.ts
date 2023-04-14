@@ -1,4 +1,4 @@
-import { postdb } from "../../../stores/data";
+import { postdb,newsdb } from "../../../stores/data";
 import { error, json } from "@sveltejs/kit";
 import { createWriteStream,mkdir } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,7 +60,6 @@ async function isDuplicate(title:string,fileName:string,mainPoints:string[]){
 export async function POST({request}:any){
     try{
         const data = await request.formData();
-        
         const file = data.get('files') as File;
         const readme=data.get('readme') as File;
         const oneline=data.get('oneline');
@@ -149,6 +148,11 @@ export async function POST({request}:any){
             });
             
             if(!fail){
+                newsdb.put({
+                    _id:`news_${uuidv4()}`,
+                    date:(new Date).toUTCString(),
+                    title:`${user.name} posted ${title}`
+                })
                 return json({
                     status:200
                 })

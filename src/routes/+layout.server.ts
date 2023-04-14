@@ -1,5 +1,5 @@
-import { Result } from "postcss";
-import { postdb } from "../stores/data";
+import { postdb,newsdb } from "../stores/data";
+import { v4 as uuidv4 } from 'uuid';
 
 let tag:string[]=[];
 
@@ -32,6 +32,16 @@ const mapFunction = function(doc:any) {
     }
 };
 
-export function load({params}:any){
-    return {tags:tag};
+export async function load({params}:any){
+  let news:any[]=[];
+  let docs=await newsdb.allDocs({include_docs: true});
+  docs.rows.forEach(row=>{
+    news.push({
+      // @ts-ignore
+      title:row.doc.title,
+      // @ts-ignore
+      date:row.doc.date
+    })
+  })
+  return {tags:tag,news};
 }

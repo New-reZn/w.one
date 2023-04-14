@@ -1,6 +1,7 @@
-import { postdb } from "../../../stores/data";
-import { error, json } from "@sveltejs/kit";
-import { createWriteStream,mkdir } from 'fs';
+import { postdb,newsdb } from "../../../stores/data";
+import { json } from "@sveltejs/kit";
+import { createWriteStream } from 'fs';
+import { v4 as uuidv4 } from "uuid";
 
 interface Post extends PouchDB.Find.FindResponse<{}>{
     _id: string;
@@ -38,6 +39,7 @@ export async function POST({request}:any) {
 
     if(check.docs[0]!=undefined){
         const doc:Post=check.docs[0];
+        const Jtitle=doc.title;
         const id=doc._id.split('_')[doc._id.split('_').length-1]
         const ogfile=doc.ogFile;
         const buffer=new Uint8Array(await file.arrayBuffer());
@@ -64,6 +66,11 @@ export async function POST({request}:any) {
         
         const fail= await postdb.put(doc)
         if(fail.ok){
+            newsdb.put({
+                _id:`news_${uuidv4()}`,
+                date:(new Date).toUTCString(),
+                title:`${user.name} upload a new version of ${Jtitle}`
+            })
             return json({
                 status:200
             })

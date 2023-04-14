@@ -126,8 +126,14 @@
     <section class="flex-1 overflow-auto">
         <slot/>
     </section>
-    <section class="text-sm capitalize overflow-y-scroll p-1 lg:w-[10.3%] w-[20.3%]">
+    <section class="text-sm capitalize overflow-y-scroll p-1 lg:w-[13.3%] w-[23.3%] h-[90.5vh]">
         <p class="relative top-0">News</p>
+            {#each data.news as news}
+                <div class="text-[10px] border-y-[1px]">
+                    <p class="underline">{news.date}</p>
+                    <p>{news.title}</p>
+                </div>
+            {/each}
     </section>
 </div>
 <footer class="flex justify-center space-x-2 inset-x-0 bottom-0 text-xs">
