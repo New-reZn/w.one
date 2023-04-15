@@ -55,7 +55,7 @@
             VerData.append("date",Date.now().toString());
             VerData.append("filedesc",Desc);
         }else{
-            console.log("fileDesc error")
+            alert('file description is neccesary before uploading a new version');
             return;
         }
         if(upload.files!=(undefined||null)){
@@ -66,11 +66,12 @@
                 console.log(`Upload Progress: ${progress}%`);
             });
         }else{
-            console.log("folder error")
+            alert('folder could not be uploaded');
             return;
         }
         //user id ,post id
         if(user==null){
+            alert('register before doing any subtantial task!!');
             registered.set(false);
             return;
         }else{
@@ -79,21 +80,35 @@
         if(data.post_digest!=null){
             VerData.append("post",data.post_digest)
         }else{
-            console.log(''); 
             return;
         }
         console.log(VerData);
         xhr.open('POST', '../Data/uploadVer');
         xhr.send(VerData);
-        //check for success
-
+        xhr.onload = function() {
+        if (xhr.status === 200) {
+                let response=JSON.parse(xhr.responseText);
+                if(response.status==false){
+                    alert('we are unable to find the orginal folder');
+                    return;
+                }
+                if(response.status==500){
+                    alert('folder with that name already exist please rename the folder and try again');
+                    return;
+                }
+                if(response.status==200){
+                    alert('succesfully uploaded the new version , reload to see uploaded file');
+                    return;
+                }
+            } else {
+                alert('Upload failed.');
+            }
+        };
     }
 
     export let data;
 
     async function incrementDownload() {
-
-        console.log('clicked')
         let user=localStorage.getItem("userId");
         if(user!=null){
             let response=await fetch('/Data/indownload',{
@@ -109,7 +124,7 @@
             })
             let result=await response.json();
             if(result.status===500){
-                console.log('exist error');
+                alert('exist error');
                 return;
             }
         }else{
@@ -150,7 +165,7 @@
             Upload New Version
             <input type="file" id="unv" bind:this={upload} {...props} class="hidden">
         </label>
-        <textarea bind:value={Desc} placeholder="write about new version here" class="p-1 border-[1px] border-[#aaa] resize-none w-4/5" name="" id=""></textarea>
+        <textarea bind:value={Desc} placeholder="write about new version here" class="p-1 border-[1px] border-[#aaa] resize-none w-4/5" maxlength="100" name="" id=""></textarea>
     </div>
     <button on:click={uploadVer} class="mx-3 bor p-2 cursor-pointer hover:bg-[#aaa] bg-[#eee] active:bg-[#999] m-1 border-[1px] border-[#888]">Upload</button>
 </div>
@@ -180,7 +195,8 @@
         padding: 0.25rem;
     }
     tr>td{
-        width: 100%;
+        text-overflow: clip;
+        width: 10ch;
     }
     tr>th{
         background-color: #eee;

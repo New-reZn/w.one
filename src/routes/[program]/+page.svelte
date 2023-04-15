@@ -30,7 +30,8 @@
                 data.likes=data.likes+1;
                 return;
             }
-        }else{
+        }else{alert(
+            'register before doing any subtantial task!!');
             registered.set(false);
         }
     }
@@ -53,6 +54,7 @@
                 return;
             }            
         }else{
+            alert('register before doing any subtantial task!!');
             registered.set(false);
         }
     })

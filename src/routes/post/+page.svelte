@@ -57,11 +57,11 @@
 
                 }
                 else{
-                    console.log("readme error content empty")
+                    alert("readme error content empty")
                 }
             }
         }else{
-            console.log("readme error")
+            alert("readme error")
         }
     }
 
@@ -78,9 +78,9 @@
     async function upload(){
         const user=localStorage.getItem('userId');
         const xhr = new XMLHttpRequest();
-        console.log('here')
 
         if(user==null){
+            alert('register before doing any subtantial task!!');
             registered.set(false);
             return;
         }else{
@@ -91,14 +91,14 @@
             postData.append("title",title);
             postData.append("date",Date.now().toString());
         }else{
-            console.log("title error")
+            alert("title error")
             return;
         }
 
         if(!(filedesc==undefined||/^\s*$/.test(filedesc.trim()))){
             postData.append("filedesc",filedesc);
         }else{
-            console.log("fileDesc error")
+            alert("fileDesc error")
             return;
         }
 
@@ -106,21 +106,21 @@
             postData.append("tags",JSON.stringify({tags:tags}));
         }
         else{
-            console.log('tag error')
+            alert('tag error')
             return;
         }
 
         if(image.files!=(undefined||null)){
             postData.append("image",image.files[0],image.files[0].name);
         }else{
-            console.log("image error")
+            alert("image error")
             return;
         }
         
         if(license.files!=(undefined||null)){
             postData.append("license",license.files[0],license.files[0].name)
         }else{
-            console.log("license error")
+            alert("license error")
             return;
         }
 
@@ -133,19 +133,40 @@
                 console.log(`Upload Progress: ${progress}%`);
             });
         }else{
-            console.log("folder error")
+            alert("folder error")
             return;
         }
 
         if(postData.get('oneline')==(undefined||null||'')){
-            console.log('readme error')
+            alert('readme error')
             return;
         }
 
-        console.log(postData);
         xhr.open('POST', 'Data/post');
         xhr.send(postData);
-        //check for sucess
+        xhr.onload = function() {
+        if (xhr.status === 200) {
+            let response=JSON.parse(xhr.responseText);
+            if(response.status==600){
+                alert('error occured while saving');
+                return;
+            }
+            if(response.status==500){
+                alert('folder already exist');
+                return;
+            }
+            if(response.status==200){
+                alert('succesfully uploaded the new version , reload to see uploaded file');
+                return;
+            }
+            if(response.status==404){
+                alert('something went wrong,please try again');
+                return;
+            }
+            } else {
+                alert('Upload failed.');
+            }
+        };
     }
 
     function previewImage(event:Event) {
@@ -160,7 +181,7 @@
             };
             reader.readAsDataURL(file);
         } else {
-            console.log("No file selected.");
+            alert("No file selected.");
         }
     }
 </script>

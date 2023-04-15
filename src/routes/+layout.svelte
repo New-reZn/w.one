@@ -72,7 +72,6 @@
     }
 
     function apply(){
-        console.log(titleOnly,hasImage)
         filter.set({
             searchText:stext,
             date,
@@ -138,10 +137,10 @@
 </div>
 <footer class="flex justify-center space-x-2 inset-x-0 bottom-0 text-xs">
     <p>©️ 2023 w.one</p>
-    <a href="/">help</a>
-    <a href="/">terms</a>
-    <a href="/">feedback</a>
-    <a href="/">about</a>
+    <a href="/extra/help">help</a>
+    <a href="/extra/terms">terms</a>
+    <a href="/extra/feedback">feedback</a>
+    <a href="/extra/about">about</a>
 </footer>
 
 {#if !($registered)}    
